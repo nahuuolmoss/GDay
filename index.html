@@ -636,12 +636,12 @@
         setInterval(updateAllCounters, 1000);
         updateAllCounters();
 
-        // --- 2. CARTA EN SOBRE ---
+        // --- CARTA EN SOBRE ---
         function toggleEnvelope() {
             document.getElementById('envelope').classList.toggle('open');
         }
 
-        // --- 3. MOSTRAR RAMO DE FLORES ---
+        // --- MOSTRAR RAMO DE FLORES ---
         function showBouquet() {
             const bouquet = document.getElementById('bouquetContainer');
             bouquet.style.display = 'block';
@@ -650,7 +650,7 @@
             }
         }
 
-        // --- 4. REPRODUCTOR DE MÚSICA ---
+        // --- REPRODUCTOR DE MÚSICA CORREGIDO ---
         const playlist = [
             {
                 title: "Cuando escucho esta canción pienso en vos.",
@@ -680,9 +680,13 @@
 
         function toggleMusic() {
             if (audio.paused) {
-                audio.play();
-                playIcon.className = "fa-solid fa-pause";
-                disc.classList.add('playing');
+                audio.play().then(() => {
+                    playIcon.className = "fa-solid fa-pause";
+                    disc.classList.add('playing');
+                }).catch(error => {
+                    console.error("Error al reproducir audio:", error);
+                    alert("No se pudo reproducir la canción. Revisa que el archivo 'src/love.mp3' exista en el repositorio con ese nombre exacto.");
+                });
             } else {
                 audio.pause();
                 playIcon.className = "fa-solid fa-play";
@@ -695,7 +699,7 @@
             currentSongIndex = (currentSongIndex + 1) % playlist.length;
             loadSong(currentSongIndex);
             if (wasPlaying) {
-                audio.play();
+                toggleMusic();
             }
         }
 
@@ -704,11 +708,11 @@
             currentSongIndex = (currentSongIndex - 1 + playlist.length) % playlist.length;
             loadSong(currentSongIndex);
             if (wasPlaying) {
-                audio.play();
+                toggleMusic();
             }
         }
 
-        // --- 5. LLUVIA DE CORAZONES Y FLORES ---
+        // --- LLUVIA DE CORAZONES Y FLORES ---
         function createParticle() {
             const particle = document.createElement('div');
             particle.classList.add('falling-heart');
